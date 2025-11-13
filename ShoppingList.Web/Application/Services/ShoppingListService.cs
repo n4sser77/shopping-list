@@ -12,27 +12,55 @@ public class ShoppingListService : IShoppingListService
     {
         // Initialize with demo data for UI demonstration
         // TODO: Students can remove or comment this out when running unit tests
-        _items = GenerateDemoItems();
-        _nextIndex = 4; // We have 4 demo items initialized
+        _items = InitializeArray();
+        _nextIndex = 0;
     }
 
     public IReadOnlyList<ShoppingItem> GetAll()
     {
+        return _items;
         // TODO: Students - Return all items from the array (up to _nextIndex)
-        return [];
+
     }
 
     public ShoppingItem? GetById(string id)
     {
-        // TODO: Students - Find and return the item with the matching id
+        foreach (var item in _items)
+        {
+            if (item.Id.Equals(id))
+                return item;
+        }
+
         return null;
     }
 
     public ShoppingItem? Add(string name, int quantity, string? notes)
     {
-        // TODO: Students - Implement this method
-        // Return the created item
-        return null;
+
+        if (_nextIndex == _items.Length - 1)
+        {
+            var newSize = _items.Length * 2;
+            ShoppingItem[] newArray = new ShoppingItem[newSize];
+            // copies array elements to new array
+            for (int i = 0; i < _items.Length; i++)
+            {
+                newArray[i] = _items[i];
+            }
+            _items = newArray;
+
+        }
+
+        _items[_nextIndex] = new ShoppingItem
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = name,
+            Quantity = quantity,
+            Notes = notes,
+            IsPurchased = false
+        };
+        var item = _items[_nextIndex];
+        _nextIndex++;
+        return item;
     }
 
     public ShoppingItem? Update(string id, string name, int quantity, string? notes)
@@ -77,41 +105,41 @@ public class ShoppingListService : IShoppingListService
         return false;
     }
 
-    private ShoppingItem[] GenerateDemoItems()
+    private ShoppingItem[] InitializeArray()
     {
         var items = new ShoppingItem[5];
-        items[0] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Dishwasher tablets",
-            Quantity = 1,
-            Notes = "80st/pack - Rea",
-            IsPurchased = false
-        };
-        items[1] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Ground meat",
-            Quantity = 1,
-            Notes = "2kg - origin Sweden",
-            IsPurchased = false
-        };
-        items[2] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Apples",
-            Quantity = 10,
-            Notes = "Pink Lady",
-            IsPurchased = false
-        };
-        items[3] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Toothpaste",
-            Quantity = 1,
-            Notes = "Colgate",
-            IsPurchased = false
-        };
+        //items[0] = new ShoppingItem
+        //{
+        //    Id = Guid.NewGuid().ToString(),
+        //    Name = "Dishwasher tablets",
+        //    Quantity = 1,
+        //    Notes = "80st/pack - Rea",
+        //    IsPurchased = false
+        //};
+        //items[1] = new ShoppingItem
+        //{
+        //    Id = Guid.NewGuid().ToString(),
+        //    Name = "Ground meat",
+        //    Quantity = 1,
+        //    Notes = "2kg - origin Sweden",
+        //    IsPurchased = false
+        //};
+        //items[2] = new ShoppingItem
+        //{
+        //    Id = Guid.NewGuid().ToString(),
+        //    Name = "Apples",
+        //    Quantity = 10,
+        //    Notes = "Pink Lady",
+        //    IsPurchased = false
+        //};
+        //items[3] = new ShoppingItem
+        //{
+        //    Id = Guid.NewGuid().ToString(),
+        //    Name = "Toothpaste",
+        //    Quantity = 1,
+        //    Notes = "Colgate",
+        //    IsPurchased = false
+        //};
         return items;
     }
 }

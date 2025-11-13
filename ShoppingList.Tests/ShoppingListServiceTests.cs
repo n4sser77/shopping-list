@@ -1,6 +1,7 @@
 ﻿using ShoppingList.Application.Services;
 using ShoppingList.Domain.Models;
 using Xunit;
+using Xunit.Sdk;
 
 namespace ShoppingList.Tests;
 
@@ -98,19 +99,79 @@ public class ShoppingListServiceTests
     // TODO: Write your tests here following the TDD workflow
 
     // Example test structure:
-    // [Fact]
-    // public void Add_WithValidInput_ShouldReturnItem()
-    // {
-    //     // Arrange
-    //     var service = new ShoppingListService();
-    //
-    //     // Act
-    //     var item = service.Add("Milk", 2, "Lactose-free");
-    //
-    //     // Assert
-    //     Assert.NotNull(item);
-    //     Assert.Equal("Milk", item!.Name);
-    //     Assert.Equal(2, item.Quantity);
-    // }
+    [Fact]
+    public void Add_WithValidInput_ShouldReturnItem()
+    {
+        // Arrange
+        var service = new ShoppingListService();
+
+        // Act
+        var item = service.Add("Milk", 2, "Lactose-free");
+
+        // Assert
+        Assert.NotNull(item);
+        Assert.Equal("Milk", item!.Name);
+        Assert.Equal(2, item.Quantity);
+    }
+    [Fact]
+    public void Add_WithFullArray_ShouldWorkAssumingMaxSizeIsFive()
+    {
+        // Arrange
+        var service = new ShoppingListService();
+
+        // Act
+        var items = service.Add("Bread", 1, null);
+        var iteam2 = service.Add("Eggs", 12, null);
+        var iteam3 = service.Add("Butter", 1, null);
+        var iteam4 = service.Add("chesse", 1, null);
+        var iteam5 = service.Add("water", 4, null);
+        var iteam6 = service.Add("soda", 2, null);
+
+
+        // Assert
+        Assert.NotNull(iteam2);
+        Assert.NotNull(iteam3);
+        Assert.NotNull(iteam4);
+        Assert.NotNull(iteam5);
+        Assert.NotNull(iteam6);
+
+        //Assert.Throws(IndexOutOfRangeException , service.Add);
+
+    }
+
+    [Fact]
+    public void GetAll_ShouldReturnAllItemsPreviouslyAdded()
+    {
+        //Arrange
+        var service = new ShoppingListService();
+        var item1 = service.Add("Milk", 2, "i love cereal");
+        var item2 = service.Add("Eggs", 50, "I love eggs");
+        //Act
+        var items = service.GetAll();
+
+        //Assert
+        Assert.NotNull(items);
+        Assert.Contains(item1, items);
+        Assert.Contains(item2, items);
+    }
+
+    [Fact]
+    public void GetIteamById_ShouldReturnIteamById()
+    {
+        //Arrange
+        var service = new ShoppingListService();
+        var expectedItem = service.Add("Egg", 50 , "more egg");
+
+        Assert.NotNull(expectedItem);
+
+        //Act
+        var returnedItem = service.GetById(expectedItem.Id);
+
+        //Assert
+        Assert.NotNull(returnedItem);
+        Assert.Equal(expectedItem.Id ,returnedItem.Id);
+        
+    }
+        
 }
 
