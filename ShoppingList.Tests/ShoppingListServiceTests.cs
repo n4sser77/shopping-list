@@ -96,6 +96,11 @@ namespace ShoppingList.Tests;
 /// </summary>
 public class ShoppingListServiceTests
 {
+    private readonly ShoppingListService _sut;
+    public ShoppingListServiceTests()
+    {
+        _sut = new();
+    }
     // TODO: Write your tests here following the TDD workflow
 
     // Example test structure:
@@ -103,10 +108,10 @@ public class ShoppingListServiceTests
     public void Add_WithValidInput_ShouldReturnItem()
     {
         // Arrange
-        var service = new ShoppingListService();
+
 
         // Act
-        var item = service.Add("Milk", 2, "Lactose-free");
+        var item = _sut.Add("Milk", 2, "Lactose-free");
 
         // Assert
         Assert.NotNull(item);
@@ -114,18 +119,18 @@ public class ShoppingListServiceTests
         Assert.Equal(2, item.Quantity);
     }
     [Fact]
-    public void Add_WithFullArray_ShouldWorkAssumingMaxSizeIsFive()
+    public void Add_WithFullArray_ShouldResizeArrayAndContinueAddingItems()
     {
         // Arrange
-        var service = new ShoppingListService();
+
 
         // Act
-        var items = service.Add("Bread", 1, null);
-        var iteam2 = service.Add("Eggs", 12, null);
-        var iteam3 = service.Add("Butter", 1, null);
-        var iteam4 = service.Add("chesse", 1, null);
-        var iteam5 = service.Add("water", 4, null);
-        var iteam6 = service.Add("soda", 2, null);
+        var items = _sut.Add("Bread", 1, null);
+        var iteam2 = _sut.Add("Eggs", 12, null);
+        var iteam3 = _sut.Add("Butter", 1, null);
+        var iteam4 = _sut.Add("chesse", 1, null);
+        var iteam5 = _sut.Add("water", 4, null);
+        var iteam6 = _sut.Add("soda", 2, null);
 
 
         // Assert
@@ -143,35 +148,100 @@ public class ShoppingListServiceTests
     public void GetAll_ShouldReturnAllItemsPreviouslyAdded()
     {
         //Arrange
-        var service = new ShoppingListService();
-        var item1 = service.Add("Milk", 2, "i love cereal");
-        var item2 = service.Add("Eggs", 50, "I love eggs");
+
+        var item1 = _sut.Add("Milk", 2, "i love cereal");
+        var item2 = _sut.Add("Eggs", 50, "I love eggs");
         //Act
-        var items = service.GetAll();
+        var items = _sut.GetAll();
 
         //Assert
         Assert.NotNull(items);
         Assert.Contains(item1, items);
         Assert.Contains(item2, items);
     }
+    [Theory]
+    [InlineData(2)]
+    public void GetAll_ShouldReturnCorrectAmountOfItems(int expectedAmount)
+    {
+        //Arrange 
+        for (int i = 0; i < expectedAmount; i++)
+        {
+            _sut.Add("Test", 1, "Some notes");
+        }
+        ;
+
+        //Act
+        var totalItems = _sut.GetAll();
+
+        //Assert
+        Assert.Equal(totalItems.Count, expectedAmount);
+
+    }
 
     [Fact]
     public void GetIteamById_ShouldReturnIteamById()
     {
         //Arrange
-        var service = new ShoppingListService();
-        var expectedItem = service.Add("Egg", 50 , "more egg");
+
+        var expectedItem = _sut.Add("Egg", 50, "more egg");
 
         Assert.NotNull(expectedItem);
 
         //Act
-        var returnedItem = service.GetById(expectedItem.Id);
+        var returnedItem = _sut.GetById(expectedItem.Id);
 
         //Assert
         Assert.NotNull(returnedItem);
-        Assert.Equal(expectedItem.Id ,returnedItem.Id);
-        
+        Assert.Equal(expectedItem.Id, returnedItem.Id);
+
     }
-        
+    [Fact]
+    public void Update_ShouldUpdateItemWithNewValues()
+    {
+        //arrange
+        var item = _sut.Add("Test", 1, "test notes");
+        var expectedName = "Egg";
+        var expectedQuantity = 20;
+        var expectedNote = "egg is healthy";
+
+        //act
+        Assert.NotNull(item);
+        var updatedItem = _sut.Update(item.Id, "Egg", 20, "egg is healthy");
+
+        //assert
+        Assert.NotNull(updatedItem);
+        Assert.Equal(expectedName, updatedItem.Name);
+        Assert.Equal(expectedQuantity, updatedItem.Quantity);
+        Assert.Equal(expectedNote, updatedItem.Notes);
+    }
+    [Fact]
+    public void SortByQuantity_ShouldReturnSortedIteams()
+    {
+        //arrange
+        var item = _sut.Add("TestIteam", 2, "test egg");
+        var item1 = _sut.Add("TestIteam", 6, "test egg");
+        var item2 = _sut.Add("TestIteam", 20, "test egg");
+        var item3 = _sut.Add("TestIteam", 1, "test egg");
+        var items = _sut.GetAll();
+        //var expected =
+        //act
+        var sortedItems = _sut.SortByQuantity((ShoppingItem[])items!);
+
+        //assert 
+        Dictionary<int, int> quantityToIndex = new()
+        {
+           {0,1},
+            {1,2 },
+            {2,6 },
+            {3,20 }
+        };
+
+        for (int i = 0; i < sortedItems.Length - 1; i++)
+        {
+            Assert.True(sortedItems[i].Quantity == quantityToIndex[i]);
+        }
+    }
+
+
 }
 

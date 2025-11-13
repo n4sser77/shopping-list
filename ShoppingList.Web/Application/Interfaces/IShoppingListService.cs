@@ -13,4 +13,6 @@ public interface IShoppingListService
     int ClearPurchased();
     bool TogglePurchased(string id);
     bool Reorder(IReadOnlyList<string> orderedIds);
+    ShoppingItem[] SortByQuantity(ShoppingItem[] items);
+    ShoppingItem[] SortByAlphabet(ShoppingItem[] itemsB);
 }

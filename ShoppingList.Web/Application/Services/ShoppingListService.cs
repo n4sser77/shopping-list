@@ -1,5 +1,6 @@
 ﻿using ShoppingList.Application.Interfaces;
 using ShoppingList.Domain.Models;
+using System.Transactions;
 
 namespace ShoppingList.Application.Services;
 
@@ -18,8 +19,16 @@ public class ShoppingListService : IShoppingListService
 
     public IReadOnlyList<ShoppingItem> GetAll()
     {
-        return _items;
-        // TODO: Students - Return all items from the array (up to _nextIndex)
+
+        ShoppingItem[] downSizedArray = new ShoppingItem[_nextIndex];
+        for (int i = 0; i < _nextIndex; i++)
+        {
+            downSizedArray[i] = _items[i];
+
+        }
+
+        return downSizedArray;
+
 
     }
 
@@ -67,7 +76,16 @@ public class ShoppingListService : IShoppingListService
     {
         // TODO: Students - Implement this method
         // Return the updated item, or null if not found
-        return null;
+        var item = GetById(id);
+        if (item is null)
+            return null;
+
+        item.Name = name;
+        item.Quantity = quantity;
+        item.Notes = notes;
+
+        return item;
+
     }
 
     public bool Delete(string id)
@@ -105,6 +123,28 @@ public class ShoppingListService : IShoppingListService
         return false;
     }
 
+    public ShoppingItem[] SortByQuantity(ShoppingItem[] items)
+    {
+        
+        for (int i = 0; i < items.Length; i++)
+        {
+            for (int j = i + 1; j < items.Length; j++)
+            {
+                if (items[j].Quantity < items[i].Quantity)
+                {
+                    var tmp = items[i];
+                    items[i] = items[j];
+                    items[j] = tmp;
+                }
+            }
+        }
+        return items;
+    }
+    public ShoppingItem[] SortByAlphabet(ShoppingItem[] items)
+    {
+
+        return items;
+    }
     private ShoppingItem[] InitializeArray()
     {
         var items = new ShoppingItem[5];
@@ -142,4 +182,6 @@ public class ShoppingListService : IShoppingListService
         //};
         return items;
     }
+
+
 }
