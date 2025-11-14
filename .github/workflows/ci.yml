@@ -41,13 +41,13 @@ jobs:
         run: dotnet test
 
       - name: push info 
-        if: github.event.name == 'push'
+        if: github.event_name == 'push'
         run: |
           echo "=============="
-          echo "Message: ${{ github.event.head_commit.message}}"
-          echo "Author: ${{ github.event.head_commit.author.name}}"
-          echo "Committer ${{github.event.head_commit.commiter.name}}"
-          echo "Branch ${{github.ref_name}}"
+          echo "Message: ${{ github.event.head_commit.message }}"
+          echo "Author: ${{ github.event.head_commit.author.name }}"
+          echo "Committer: ${{ github.event.head_commit.committer.name }}"
+          echo "Branch: ${{ github.ref_name }}"
           echo "=============="
 
   
