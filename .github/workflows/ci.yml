@@ -24,9 +24,9 @@ jobs:
       if: ${{ matrix.os == 'ubuntu-latest' }}
       shell: bash
       run: |
-        echo "${{ github.repository }} ${{ github.event_name }}"
+        echo " Repo: ${{ github.repository }} event: ${{ github.event_name }}"
         if [ "${{ github.event_name }}" = "push" ]; then
-           echo "Commit: ${{ github.event.head_commit.message }}"
+           echo "Commit: ${{ github.event.head_commit }}"
         fi
             
                   
