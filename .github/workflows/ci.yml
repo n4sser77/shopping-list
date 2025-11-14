@@ -20,35 +20,31 @@ jobs:
         dotnet-version: [ '8.0.x', '9.0.x' ]
 
     steps:
-    - name: Print Context
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+    - name: Context Intelligence
       shell: bash
-      run:   |
+      run: |
         echo "Context Intelligence"
         echo "---------------------"
         echo "Repository: ${{ github.repository }}"
         echo "Event: ${{ github.event_name }}"
+
         if [ "${{ github.event_name }}" = "push" ]; then
           echo "Commit Author: ${{ github.event.head_commit.author.name }}"
           echo "Commit Message: ${{ github.event.head_commit.message }}"
           echo "Changed Files (added): ${{ github.event.head_commit.added }}"
+
         elif [ "${{ github.event_name }}" = "pull_request" ]; then
           echo "Pull Request Number: ${{ github.event.pull_request.number }}"
           echo "Author: ${{ github.event.pull_request.user.login }}"
           echo "Source Branch: ${{ github.head_ref }}"
           echo "Target Branch: ${{ github.base_ref }}"
+
         elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
           echo "Triggered By: ${{ github.actor }}"
           echo "Inputs:"
-          if github.event.inputs != null and github.event.inputs != '':
-             for key, value in github.event.inputs.items():
-                echo "  - ${key}: ${value}"
-             endfor
-         else:
-          echo "  (no inputs provided)"
-         endif
+          echo "  environment: ${{ github.event.inputs.environment }}"
+          echo "  version: ${{ github.event.inputs.version }}"
         fi
-
         
     - uses: actions/checkout@v4
     - name: Setup .NET
