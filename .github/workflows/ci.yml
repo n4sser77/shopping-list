@@ -21,8 +21,12 @@ jobs:
 
     steps:
     - name: Print Context
-      run: echo ' ${{ github.repository }} '
-      run: echo ' ${{ github.event_name }} '
+      run: | 
+            echo ' ${{ github.repository }} ${{ github.event_name }} '
+            if [$github.event_name == push]
+               echo 'Commit: $github.event.head_commit '
+            
+                  
     
     - uses: actions/checkout@v4
     - name: Setup .NET
