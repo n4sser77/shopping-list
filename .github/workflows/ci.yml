@@ -1,0 +1,37 @@
+name: TestWorkflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        dotnet-version: ['8.0.x', '9.0.x']
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Build
+        run: dontnet build
+
+      - name: Run tests
+        if: success()
+        run: dotnet test
+
+
+  
+  
+
+    
