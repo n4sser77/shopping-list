@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Print Context
-      if: ${{ matrix.os == 'ubuntu' }}
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       shell: bash
       run: |
         echo "${{ github.repository }} ${{ github.event_name }}"
