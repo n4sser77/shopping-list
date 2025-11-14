@@ -22,9 +22,10 @@ jobs:
     steps:
     - name: Print Context
       run: | 
-            echo ' ${{ github.repository }} ${{ github.event_name }} '
-            if [$github.event_name == push]
-               echo 'Commit: $github.event.head_commit '
+         echo ' ${{ github.repository }} ${{ github.event_name }} '
+         if [$github.event_name == push]
+            echo 'Commit: $github.event.head_commit '
+         fi
             
                   
     
