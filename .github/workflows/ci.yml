@@ -23,7 +23,7 @@ jobs:
     - name: Print Context
       run: | 
          echo ' ${{ github.repository }} ${{ github.event_name }} '
-         if [$github.event_name == push]
+         if [$github.event_name == push] then
             echo 'Commit: $github.event.head_commit '
          fi
             
